@@ -1,0 +1,17 @@
+A minimal burp state file unpacker, unpacks requests and responses into individual
+files (similar to what WebScarab uses for "state").
+
+A burp state file is a zip file with a single entry called 'burp'. This file
+uses some sort of XMLish file format, where the request and responses are stored
+in <request> and <response> tags. They also include length information, though.
+Right after the opening tag, there is a one-byte field which is the length of the
+following length field (usually 4). The length field then denotes the length of
+the content that follows, followed by a closing tag.
+
+This implementation just iterates over the file (in-memory, so beware of loading
+huge state files for now) and extracts all the requests and responses into individual
+numbered files.
+
+Sample run:
+$ mkdir /tmp/http
+$ ./unpack_burp.py statefile.burp /tmp/http
